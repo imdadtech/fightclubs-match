@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:17
+    container_name: fightclubs-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fightclubs
+    ports:
+      - "5432:5432"
+    volumes:
+      - fightclubs-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d fightclubs"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  fightclubs-db-data:

@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Discipline {
+  BOXE_ANGLAISE
+  MUAY_THAI
+  KICK_BOXING
+  K1
+  MMA
+}
+
+enum Federation {
+  FFB
+  FFKMDA
+  AUTRE
+  NON_AFFILIE
+}
+
+model Club {
+  id          String       @id @default(uuid())
+  name        String       @db.VarChar(80)
+  city        String
+  postalCode  String       @db.Char(5)
+  disciplines Discipline[]
+  federations Federation[]
+
+  // Contact pour organiser un combat (partagé avec les autres clubs)
+  contactFirstName String
+  contactLastName  String
+  contactPhone     String?
+  phoneHasWhatsapp Boolean  @default(false)
+  shareWhatsapp    Boolean  @default(false)
+  shareEmail       Boolean  @default(false) // partage l'e-mail de connexion (User.email)
+  sharePhone       Boolean  @default(false)
+  sharingConsentAt DateTime
+
+  users     User[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id              String    @id @default(uuid())
+  email           String    @unique
+  passwordHash    String
+  termsAcceptedAt DateTime
+  club            Club?     @relation(fields: [clubId], references: [id])
+  clubId          String?
+  sessions        Session[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([clubId])
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  // SHA-256 du jeton du cookie : une fuite de la base ne donne pas de sessions valides
+  tokenHash String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}

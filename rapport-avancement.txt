@@ -1,0 +1,26 @@
+Objet : FightClubs – point d'avancement sur l'écran d'accueil
+
+Bonjour,
+
+Voici un point rapide sur l'avancement de FightClubs.
+
+CE QUI EST EN PLACE
+
+- L'écran « Tu es qui sur le ring ? » : c'est le premier écran que verra un nouvel utilisateur. Il choisit son profil, soit « Un club », soit « Un promoteur ». Il y a une grande photo de boxe à gauche, le logo FightClubs en haut, et un lien « Se connecter » pour ceux qui ont déjà un compte.
+- Les boutons : ils suivent les règles de design définies pour le projet, avec une seule action principale mise en avant par écran. Ils sont prêts, mais pas encore utilisés dans l'application.
+- La navigation : l'application sait maintenant passer d'une page à l'autre. Pour l'instant, elle ouvre directement l'écran d'accueil.
+- Les règles de design : elles sont écrites et rangées dans le projet, pour que tout le monde (et nos outils) les applique de la même façon.
+
+CE QUI RESTE À FAIRE
+
+- Les pages vers lesquelles mènent les deux cartes (le parcours « club » et le parcours « promoteur ») n'existent pas encore, ni la page de connexion. Pour l'instant, cliquer dessus affiche un écran vide.
+- L'affichage n'a pas encore été relu visuellement sur navigateur et sur mobile. Sur mobile, la photo est masquée.
+
+PROCHAINE ÉTAPE PROPOSÉE
+
+Créer les pages de parcours « club » et « promoteur », puis la page de connexion.
+
+Je reste disponible pour en discuter.
+
+Cordialement,
+Imdad

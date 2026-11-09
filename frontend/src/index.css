@@ -1,0 +1,145 @@
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Hanken+Grotesk:wght@400;500;700&display=swap");
+@import "tailwindcss";
+
+@theme {
+  /* Couleurs */
+  --color-canvas: #fdf7f0;
+  --color-surface-raised: #ffffff;
+  --color-surface-sunken: #f4eadf;
+  --color-ink: #24160f;
+  --color-ink-muted: #6b5a4e;
+  --color-line: #e4d6c6;
+  --color-line-strong: #8a7767;
+  --color-corner-red: #e02f2a;
+  --color-red-deep: #b71c1c;
+  --color-red-tint: #fde3de;
+  --color-on-red: #ffffff;
+  --color-corner-blue: #2447d6;
+  --color-blue-tint: #e3e9fc;
+  --color-on-blue: #ffffff;
+  --color-tape: #ffc31f;
+  --color-tape-tint: #fff0c2;
+  --color-on-tape: var(--color-ink);
+  --color-success: #0f6b3e;
+  --color-success-tint: #e4f5eb;
+  --color-on-success: #ffffff;
+  --color-on-ink: #fdf7f0;
+
+  /* Familles de polices */
+  --font-display: "Archivo", "Arial Narrow", Arial, sans-serif;
+  --font-sans: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* Affiche (display) */
+  --text-display-xl: 64px;
+  --text-display-xl--line-height: 60px;
+  --text-display-xl--font-weight: 900;
+  --text-display-xl--letter-spacing: -0.02em;
+
+  --text-display-lg: 44px;
+  --text-display-lg--line-height: 44px;
+  --text-display-lg--font-weight: 900;
+  --text-display-lg--letter-spacing: -0.015em;
+
+  --text-display-md: 30px;
+  --text-display-md--line-height: 32px;
+  --text-display-md--font-weight: 800;
+  --text-display-md--letter-spacing: -0.01em;
+
+  --text-title: 22px;
+  --text-title--line-height: 26px;
+  --text-title--font-weight: 800;
+  --text-title--letter-spacing: -0.005em;
+
+  /* Texte */
+  --text-body-lg: 17px;
+  --text-body-lg--line-height: 26px;
+  --text-body-lg--font-weight: 400;
+
+  --text-body: 15px;
+  --text-body--line-height: 22px;
+  --text-body--font-weight: 400;
+
+  --text-body-strong: 15px;
+  --text-body-strong--line-height: 22px;
+  --text-body-strong--font-weight: 700;
+
+  --text-label: 12px;
+  --text-label--line-height: 16px;
+  --text-label--font-weight: 700;
+  --text-label--letter-spacing: 0.08em;
+
+  --text-caption: 12px;
+  --text-caption--line-height: 16px;
+  --text-caption--font-weight: 500;
+
+  /* Chiffres */
+  --text-stat-xl: 48px;
+  --text-stat-xl--line-height: 48px;
+  --text-stat-xl--font-weight: 900;
+  --text-stat-xl--letter-spacing: -0.02em;
+
+  --text-stat-md: 28px;
+  --text-stat-md--line-height: 28px;
+  --text-stat-md--font-weight: 800;
+  --text-stat-md--letter-spacing: -0.01em;
+
+  /* Espacements (variables seulement : n'écrasent pas l'échelle p-4, gap-6…) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 72px;
+
+  /* Rayons */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+
+  /* Ombres */
+  --shadow-soft: 0 1px 0 #e4d6c6, 0 10px 24px -12px rgba(36, 22, 15, 0.25);
+  --shadow-lift: 0 14px 32px -14px rgba(36, 22, 15, 0.35);
+  --shadow-poster: 4px 4px 0 0 #24160f;
+}
+
+@layer base {
+  /* Les maquettes n'imposent pas d'interligne global (line-height: normal). */
+  html,
+  body {
+    line-height: normal;
+  }
+
+  body {
+    background-color: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
+
+  /* Champs de formulaire (valeurs des maquettes d'onboarding) */
+  input:not([type="checkbox"]),
+  select,
+  textarea {
+    font: 500 16px var(--font-sans);
+    color: var(--color-ink);
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 48px;
+    padding: 0 14px;
+    border-radius: var(--radius-md);
+    border: 2px solid var(--color-line-strong);
+    background: var(--color-surface-raised);
+  }
+
+  input[aria-invalid="true"] {
+    border-color: var(--color-red-deep);
+  }
+
+  label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-ink);
+  }
+}
