@@ -85,7 +85,7 @@ export function PrivacyText() {
       <Section title="4. Ce qui est partagé">
         <p className="m-0">
           Ton prénom, ton nom et uniquement les moyens de contact que tu as
-          activés (e-mail, téléphone, WhatsApp) sont visibles par les autres
+          activés (e-mail, téléphone) sont visibles par les autres
           clubs. Tu peux désactiver un moyen de contact à tout moment, à
           condition d'en garder un actif. Nous ne vendons pas tes données et ne
           les utilisons pas pour de la publicité.

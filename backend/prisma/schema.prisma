@@ -35,7 +35,6 @@ model Club {
   contactLastName  String
   contactPhone     String?
   phoneHasWhatsapp Boolean  @default(false)
-  shareWhatsapp    Boolean  @default(false)
   shareEmail       Boolean  @default(false) // partage l'e-mail de connexion (User.email)
   sharePhone       Boolean  @default(false)
   sharingConsentAt DateTime

@@ -10,17 +10,13 @@ const linkClasses =
   "cursor-pointer bg-transparent p-0 font-sans text-[14px] font-bold text-red-deep underline underline-offset-2 " +
   "hover:text-ink focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-ink";
 
-function ClubStepContact({ form, update, errors, touch }: StepProps) {
+function ClubStepContact({ form, update, errors }: StepProps) {
   const termsId = useId();
   const [legalOpen, setLegalOpen] = useState<LegalDoc | null>(null);
   const setContact = (key: keyof StepProps["form"]["contacts"], value: boolean) =>
-    {
-      update({ contacts: { ...form.contacts, [key]: value } });
-      touch("contacts");
-    };
+    update({ contacts: { ...form.contacts, [key]: value } }, { touch: true });
 
   const hasPhone = form.phone.trim() !== "";
-  const canWhatsapp = hasPhone && form.phoneHasWhatsapp;
 
   // Le lien est dans le <label> : on empêche le clic de cocher la case.
   const openLegal = (e: MouseEvent<HTMLButtonElement>, doc: LegalDoc) => {
@@ -33,14 +29,6 @@ function ClubStepContact({ form, update, errors, touch }: StepProps) {
       <ContactToggleTutorial className="col-span-2" />
       <ToggleRow
         className="col-span-2 min-[900px]:col-span-1"
-        title="WhatsApp"
-        subtitle={canWhatsapp ? form.phone : "Indique un numéro avec WhatsApp"}
-        disabled={!canWhatsapp}
-        checked={form.contacts.whatsapp}
-        onChange={(v) => setContact("whatsapp", v)}
-      />
-      <ToggleRow
-        className="col-span-2 min-[900px]:col-span-1"
         title="E-mail"
         subtitle={form.email || "Non communiqué"}
         checked={form.contacts.email}
@@ -49,7 +37,7 @@ function ClubStepContact({ form, update, errors, touch }: StepProps) {
       <ToggleRow
         className="col-span-2 min-[900px]:col-span-1"
         title="Téléphone"
-        subtitle={hasPhone ? form.phone : "Indique un numéro"}
+        subtitle={hasPhone ? `${form.phone}${form.phoneHasWhatsapp ? " · aussi sur WhatsApp" : ""}` : "Indique un numéro"}
         disabled={!hasPhone}
         checked={form.contacts.phone}
         onChange={(v) => setContact("phone", v)}
@@ -70,10 +58,7 @@ function ClubStepContact({ form, update, errors, touch }: StepProps) {
           type="checkbox"
           checked={form.acceptedTerms}
           aria-invalid={!!errors.acceptedTerms}
-          onChange={(e) => {
-            update({ acceptedTerms: e.target.checked });
-            touch("acceptedTerms");
-          }}
+          onChange={(e) => update({ acceptedTerms: e.target.checked }, { touch: true })}
           className="m-0 size-6 min-h-6 flex-none p-0 accent-corner-red"
         />
         <span>
@@ -97,8 +82,7 @@ function ClubStepContact({ form, update, errors, touch }: StepProps) {
         open={legalOpen}
         onClose={() => setLegalOpen(null)}
         onAccept={() => {
-          update({ acceptedTerms: true });
-          touch("acceptedTerms");
+          update({ acceptedTerms: true }, { touch: true });
           setLegalOpen(null);
         }}
       />

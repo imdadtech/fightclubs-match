@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 import { prisma } from "./db/prisma.js";
+import { logger } from "./lib/logger.js";
 import { authRouter } from "./modules/auth/auth.routes.js";
 
 const app = express();
@@ -21,4 +22,4 @@ app.get("/health", async (_req, res) => {
 });
 
 const port = Number(process.env.PORT) || 3000;
-app.listen(port, () => console.log(`API sur http://localhost:${port}`));
+app.listen(port, () => logger.info(`API sur http://localhost:${port}`, { port }));

@@ -4,6 +4,7 @@ import { z } from "zod";
 import { clubSignupSchema, loginSchema } from "./auth.schemas.js";
 import { endSession, startSession } from "./session.js";
 import { prisma } from "../../db/prisma.js";
+import { logger } from "../../lib/logger.js";
 import { Prisma } from "../../generated/prisma/client.js";
 
 const BCRYPT_ROUNDS = 12;
@@ -28,7 +29,6 @@ export async function signupClub(req: Request, res: Response) {
         contactLastName: manager.lastName,
         contactPhone: manager.phone,
         phoneHasWhatsapp: manager.phoneHasWhatsapp,
-        shareWhatsapp: manager.contacts.whatsapp,
         shareEmail: manager.contacts.email,
         sharePhone: manager.contacts.phone,
         sharingConsentAt: now,
@@ -49,7 +49,7 @@ export async function signupClub(req: Request, res: Response) {
       res.status(409).json({ error: "email_taken" });
       return;
     }
-    console.error(err);
+    logger.error("Erreur interne", err);
     res.status(500).json({ error: "internal" });
   }
 }
@@ -72,7 +72,7 @@ export async function login(req: Request, res: Response) {
     const { passwordHash: _omit, ...safe } = user;
     res.json(safe);
   } catch (err) {
-    console.error(err);
+    logger.error("Erreur interne", err);
     res.status(500).json({ error: "internal" });
   }
 }
@@ -82,7 +82,7 @@ export async function logout(req: Request, res: Response) {
     await endSession(req, res);
     res.status(204).end();
   } catch (err) {
-    console.error(err);
+    logger.error("Erreur interne", err);
     res.status(500).json({ error: "internal" });
   }
 }

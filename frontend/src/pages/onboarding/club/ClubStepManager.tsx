@@ -59,7 +59,7 @@ function ClubStepManager({ form, update, errors, touch }: StepProps) {
             phone,
             ...(cleared && {
               phoneHasWhatsapp: false,
-              contacts: { ...form.contacts, whatsapp: false, phone: false },
+              contacts: { ...form.contacts, phone: false },
             }),
             ...(firstInput && { contacts: { ...form.contacts, phone: true } }),
           });
@@ -74,12 +74,7 @@ function ClubStepManager({ form, update, errors, touch }: StepProps) {
           type="checkbox"
           checked={form.phoneHasWhatsapp}
           disabled={!hasPhone}
-          onChange={(e) =>
-            update({
-              phoneHasWhatsapp: e.target.checked,
-              contacts: { ...form.contacts, whatsapp: e.target.checked },
-            })
-          }
+          onChange={(e) => update({ phoneHasWhatsapp: e.target.checked })}
           className="m-0 size-6 min-h-6 flex-none p-0 accent-corner-red"
         />
         <span>Ce numéro a un compte WhatsApp</span>
@@ -96,10 +91,7 @@ function ClubStepManager({ form, update, errors, touch }: StepProps) {
       <ConsentCheckbox
         className="col-span-2"
         checked={form.sharingConsent}
-        onChange={(sharingConsent) => {
-          update({ sharingConsent });
-          touch("sharingConsent");
-        }}
+        onChange={(sharingConsent) => update({ sharingConsent }, { touch: true })}
         error={errors.sharingConsent}
       >
         Mon prénom, mon nom, mon e-mail et mon numéro de téléphone servent uniquement à permettre aux autres clubs de me

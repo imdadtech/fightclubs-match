@@ -1,0 +1,40 @@
+Objet : FightClubs Match – point d'avancement sur la partie serveur
+
+Bonjour,
+
+Voici un récapitulatif de ce qui a été mis en place aujourd'hui sur la partie « invisible » de l'application, celle qui enregistre les données et gère les comptes.
+
+CE QUI EST FAIT
+
+- Les fondations du serveur. Il est prêt à recevoir les demandes de l'application. Il vérifie lui-même que sa mémoire (la base de données) répond bien.
+
+- Une base de données en place. Elle tourne pour l'instant sur l'ordinateur de développement. Elle stocke les clubs et leurs responsables. Nous pourrons la déplacer en ligne plus tard.
+
+- La création de compte d'un club. Les informations saisies dans le formulaire d'inscription peuvent maintenant être enregistrées : le club (nom, ville, disciplines, fédérations), son responsable et les moyens de contact choisis. Le serveur revérifie les règles du formulaire, par exemple qu'au moins un moyen de contact reste actif. Il refuse aussi une deuxième inscription avec la même adresse e-mail.
+
+- La connexion et la déconnexion. Une personne peut se connecter avec son e-mail et son mot de passe, et rester connectée jusqu'à 30 jours. Elle peut aussi se déconnecter.
+
+- La sécurité des mots de passe. Ils ne sont jamais conservés en clair : seule une version chiffrée est enregistrée. Même si la base était consultée par erreur, les mots de passe resteraient illisibles.
+
+- Les consentements. Nous enregistrons la date à laquelle la personne a accepté les conditions d'utilisation, et celle à laquelle elle a accepté de partager ses coordonnées avec les autres clubs.
+
+COMMENT LES DONNÉES SONT ORGANISÉES
+
+- Le compte ne contient que ce qui sert à se connecter : e-mail, mot de passe et, le cas échéant, le club auquel il est rattaché.
+
+- Le club regroupe tout le reste : ses informations et les coordonnées de contact visibles par les autres clubs.
+
+Cette séparation permettra plus tard de rattacher plusieurs personnes à un même club, ou d'ajouter d'autres profils, comme celui de promoteur.
+
+CE QUI RESTE À FAIRE
+
+- Connecter le formulaire d'inscription visible à l'écran à ce serveur. Aujourd'hui, les deux fonctionnent séparément.
+- Créer la page de connexion.
+- Limiter le nombre de tentatives de connexion, pour se protéger des essais répétés de mots de passe, avant toute mise en ligne.
+- Héberger la base de données en ligne.
+- Ajouter les fonctionnalités suivantes : annonces, propositions de combat, profil promoteur.
+
+Je reste disponible pour toute question.
+
+Bien cordialement,
+[Prénom]

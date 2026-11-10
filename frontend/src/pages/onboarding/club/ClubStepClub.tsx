@@ -22,10 +22,7 @@ function ClubStepClub({ form, update, errors, touch }: StepProps) {
         options={DISCIPLINES}
         value={form.disciplines}
         error={errors.disciplines}
-        onChange={(disciplines) => {
-          update({ disciplines });
-          touch("disciplines");
-        }}
+        onChange={(disciplines) => update({ disciplines }, { touch: true })}
       />
       <TextField
         label="Ville"
@@ -52,10 +49,7 @@ function ClubStepClub({ form, update, errors, touch }: StepProps) {
         options={FEDERATIONS}
         value={form.federations}
         error={errors.federations}
-        onChange={(federations) => {
-          update({ federations });
-          touch("federations");
-        }}
+        onChange={(federations) => update({ federations }, { touch: true })}
       />
     </>
   );

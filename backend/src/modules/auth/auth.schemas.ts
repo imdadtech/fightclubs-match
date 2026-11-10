@@ -27,7 +27,7 @@ export const clubSignupSchema = z
       password: z.string().min(8).max(72), // bcrypt ignore au-delà de 72 octets
       phone: phone.optional(),
       phoneHasWhatsapp: z.boolean().default(false),
-      contacts: z.object({ whatsapp: z.boolean(), email: z.boolean(), phone: z.boolean() }),
+      contacts: z.object({ email: z.boolean(), phone: z.boolean() }),
       sharingConsent: z.literal(true),
       acceptedTerms: z.literal(true),
     }),
@@ -36,9 +36,7 @@ export const clubSignupSchema = z
     const issue = (path: string[], message: string) => ctx.addIssue({ code: "custom", path: ["manager", ...path], message });
     if (m.phoneHasWhatsapp && !m.phone) issue(["phoneHasWhatsapp"], "WhatsApp nécessite un numéro de téléphone.");
     if (m.contacts.phone && !m.phone) issue(["contacts", "phone"], "Le canal téléphone nécessite un numéro.");
-    if (m.contacts.whatsapp && !(m.phone && m.phoneHasWhatsapp))
-      issue(["contacts", "whatsapp"], "Le canal WhatsApp nécessite un numéro avec WhatsApp.");
-    if (!m.contacts.email && !m.contacts.phone && !m.contacts.whatsapp)
+    if (!m.contacts.email && !m.contacts.phone)
       issue(["contacts"], "Au moins un moyen de contact doit être actif.");
   });
 

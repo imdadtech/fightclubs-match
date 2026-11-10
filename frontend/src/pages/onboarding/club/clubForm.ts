@@ -10,7 +10,7 @@ export interface ClubForm {
   password: string;
   phone: string;
   phoneHasWhatsapp: boolean;
-  contacts: { whatsapp: boolean; email: boolean; phone: boolean };
+  contacts: { email: boolean; phone: boolean };
   acceptedTerms: boolean;
   sharingConsent: boolean;
 }
@@ -30,7 +30,7 @@ export const initialClubForm: ClubForm = {
   password: "",
   phone: "",
   phoneHasWhatsapp: false,
-  contacts: { whatsapp: false, email: false, phone: false },
+  contacts: { email: false, phone: false },
   acceptedTerms: false,
   sharingConsent: false,
 };
@@ -39,9 +39,5 @@ export const initialClubForm: ClubForm = {
 export function hasActiveContact(form: ClubForm): boolean {
   // Formik transmet "" comme undefined à Yup : ne pas supposer que phone est une chaîne.
   const hasPhone = (form.phone ?? "").trim() !== "";
-  return (
-    form.contacts.email ||
-    (form.contacts.phone && hasPhone) ||
-    (form.contacts.whatsapp && hasPhone && form.phoneHasWhatsapp)
-  );
+  return form.contacts.email || (form.contacts.phone && hasPhone);
 }
