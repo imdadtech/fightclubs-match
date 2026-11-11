@@ -13,7 +13,9 @@
     "postinstall": "prisma generate",
     "db:up": "docker compose up -d --wait",
     "db:down": "docker compose down",
-    "e2e:setup": "tsx scripts/e2e-setup.ts"
+    "db:seed": "tsx scripts/seed.ts",
+    "e2e:setup": "tsx scripts/e2e-setup.ts",
+    "prisma:studio": "prisma studio"
   },
   "keywords": [],
   "author": "",

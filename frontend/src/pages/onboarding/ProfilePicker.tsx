@@ -11,13 +11,15 @@ const profiles: ProfileCardProps[] = [
     href: "/onboarding/club",
     icon: <ClubIcon />,
     title: "Un club",
-    description: "Trouve un adversaire pour tes combattants : publie une annonce, les autres clubs te proposent un combat.",
+    description:
+      "Trouve un adversaire pour tes combattants : publie une annonce, les autres clubs te proposent un combat.",
   },
   {
     href: "/onboarding/individual",
     icon: <EventCreatorIcon />,
     title: "Un promoteur",
-    description: "Compose une carte, trouve des combattants.",
+    description:
+      "Compose une carte, trouve des combattants. \n Publie ton gala et reçois des candidatures de clubs.",
   },
 ];
 

@@ -1,12 +1,11 @@
 import { useFormik } from "formik";
 import { useCallback, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AppLogo from "../../../components/atoms/AppLogo";
 import Button from "../../../components/atoms/Buttons";
 import StepIndicator from "../../../components/molecules/StepIndicator";
 import Toast from "../../../components/molecules/Toast";
 import { ApiError } from "../../../lib/api";
-import ClubAccountCreated from "./ClubAccountCreated";
 import ClubStepClub from "./ClubStepClub";
 import ClubStepContact from "./ClubStepContact";
 import ClubStepManager from "./ClubStepManager";
@@ -62,13 +61,14 @@ function BackIcon() {
 
 function ClubOnboarding() {
   const [step, setStep] = useState(1);
-  const [created, setCreated] = useState(false);
   /** E-mail refusé par l'API (compte déjà existant) : l'erreur reste affichée tant qu'il n'est pas modifié. */
   const [takenEmail, setTakenEmail] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const closeToast = useCallback(() => setToast(null), []);
   const isLast = step === STEPS.length;
+
+  const nav = useNavigate();
 
   const formik = useFormik<ClubForm>({
     initialValues: initialClubForm,
@@ -79,13 +79,16 @@ function ClubOnboarding() {
       setToast(null);
       try {
         await signupClub(values);
-        setCreated(true);
+
+        nav("/adversaires");
       } catch (error) {
         if (error instanceof ApiError && error.code === "email_taken") {
           setTakenEmail(normalizeEmail(values.email));
           goToStep(2);
         } else if (error instanceof ApiError && error.status === 400) {
-          setSubmitError("Certaines informations ne sont pas valides. Reviens sur les étapes précédentes pour les vérifier.");
+          setSubmitError(
+            "Certaines informations ne sont pas valides. Reviens sur les étapes précédentes pour les vérifier.",
+          );
         } else {
           setToast("Une erreur s'est produite. Réessaie dans un instant.");
         }
@@ -99,7 +102,8 @@ function ClubOnboarding() {
     if (options?.touch) {
       // Pas de validation ici : `setValues` valide déjà les nouvelles valeurs, et valider une 2e fois
       // lirait encore les anciennes (course entre les deux validations).
-      for (const field of Object.keys(patch) as (keyof ClubForm)[]) void formik.setFieldTouched(field, true, false);
+      for (const field of Object.keys(patch) as (keyof ClubForm)[])
+        void formik.setFieldTouched(field, true, false);
     }
   };
   const touch = (...fields: (keyof ClubForm)[]) => {
@@ -112,7 +116,11 @@ function ClubOnboarding() {
     if (touched[key] && typeof error === "string") visibleErrors[key] = error;
   }
 
-  if (step === 2 && takenEmail !== null && normalizeEmail(form.email) === takenEmail) {
+  if (
+    step === 2 &&
+    takenEmail !== null &&
+    normalizeEmail(form.email) === takenEmail
+  ) {
     visibleErrors.email = "Un compte existe déjà avec cette adresse e-mail.";
   }
 
@@ -132,10 +140,12 @@ function ClubOnboarding() {
       );
       // Amène le premier champ en erreur à l'écran.
       requestAnimationFrame(() =>
-        document.querySelector<HTMLElement>('[aria-invalid="true"], [role="alert"]')?.scrollIntoView({
-          block: "center",
-          behavior: "smooth",
-        }),
+        document
+          .querySelector<HTMLElement>('[aria-invalid="true"], [role="alert"]')
+          ?.scrollIntoView({
+            block: "center",
+            behavior: "smooth",
+          }),
       );
       return;
     }
@@ -143,8 +153,6 @@ function ClubOnboarding() {
     else goToStep(step + 1);
   };
   const isFirst = step === 1;
-
-  if (created) return <ClubAccountCreated />;
 
   return (
     <div className="flex min-h-dvh flex-col bg-canvas text-ink min-[900px]:grid min-[900px]:grid-cols-[480px_1fr]">
@@ -185,13 +193,21 @@ function ClubOnboarding() {
         <div className="flex flex-1 flex-col min-[900px]:flex-none min-[900px]:gap-6 min-[900px]:rounded-3xl min-[900px]:border-2 min-[900px]:border-ink min-[900px]:bg-surface-raised min-[900px]:p-8 min-[900px]:shadow-[6px_6px_0_0_var(--color-ink)]">
           <div className="flex-1 px-4 pt-3.5 min-[900px]:flex-none min-[900px]:p-0">
             <div className="grid grid-cols-[repeat(2,minmax(0,1fr))] content-start gap-x-2.5 gap-y-3.5 min-[900px]:gap-4">
-              <Component form={form} update={update} errors={visibleErrors} touch={touch} />
+              <Component
+                form={form}
+                update={update}
+                errors={visibleErrors}
+                touch={touch}
+              />
             </div>
           </div>
 
           <div className="sticky bottom-0 flex flex-col gap-2.5 border-t border-line bg-surface-raised px-4 pt-3 pb-5 min-[900px]:static min-[900px]:border-0 min-[900px]:bg-transparent min-[900px]:p-0">
             {submitError && (
-              <p role="alert" className="m-0 text-[14px] leading-5 font-bold text-red-deep">
+              <p
+                role="alert"
+                className="m-0 text-[14px] leading-5 font-bold text-red-deep"
+              >
                 {submitError}
               </p>
             )}
@@ -213,7 +229,11 @@ function ClubOnboarding() {
                 disabled={formik.isSubmitting}
                 onClick={handleNext}
               >
-                {formik.isSubmitting ? "Création du compte…" : isLast ? "Créer le compte du club" : "Suivant"}
+                {formik.isSubmitting
+                  ? "Création du compte…"
+                  : isLast
+                    ? "Créer le compte du club"
+                    : "Suivant"}
               </Button>
             </div>
             {isFirst && (

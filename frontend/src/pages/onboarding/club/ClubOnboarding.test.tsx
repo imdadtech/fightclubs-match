@@ -1,13 +1,16 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import ClubOnboarding from "./ClubOnboarding";
 
 function setup() {
   render(
     <MemoryRouter>
-      <ClubOnboarding />
+      <Routes>
+        <Route path="/" element={<ClubOnboarding />} />
+        <Route path="/adversaires" element={<h1>Page adversaires</h1>} />
+      </Routes>
     </MemoryRouter>,
   );
   return userEvent.setup();
@@ -121,12 +124,12 @@ describe("ClubOnboarding : envoi à l'API", () => {
     return user;
   }
 
-  it("affiche la confirmation quand l'API crée le compte", async () => {
+  it("redirige vers la recherche d'adversaires quand l'API crée le compte", async () => {
     const fetchMock = vi.fn().mockResolvedValue(new Response("{}", { status: 201 }));
     vi.stubGlobal("fetch", fetchMock);
     await fillAllSteps();
 
-    expect(await screen.findByRole("heading", { name: "Le compte de ton club est créé" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Page adversaires" })).toBeInTheDocument();
     expect(JSON.parse(fetchMock.mock.calls[0][1].body).club.disciplines).toEqual(["BOXE_ANGLAISE"]);
   });
 

@@ -54,3 +54,13 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
     next(err);
   }
 }
+
+/** À placer après `requireAuth` : refuse (403) un compte rattaché à aucun club, sinon expose `req.clubId`. */
+export function requireClub(req: Request, res: Response, next: NextFunction) {
+  if (!req.user?.clubId) {
+    res.status(403).json({ error: "no_club" });
+    return;
+  }
+  req.clubId = req.user.clubId;
+  next();
+}

@@ -1,4 +1,5 @@
 import AppLogo from "../../../components/atoms/AppLogo";
+import { buttonClasses } from "../../../components/atoms/Buttons";
 
 function ClubAccountCreated() {
   return (
@@ -11,6 +12,10 @@ function ClubAccountCreated() {
         <p role="status" className="m-0 text-[16px] leading-6 text-ink-muted min-[900px]:text-[18px] min-[900px]:leading-7">
           Tu es connecté. Les autres clubs pourront bientôt te contacter pour organiser un combat.
         </p>
+        {/* Lien classique (rechargement) : la session créée à l'inscription est relue par l'app. */}
+        <a href="/adversaires" className={`${buttonClasses({ size: "lg" })} mt-4 self-start px-8`}>
+          Trouver un adversaire
+        </a>
       </main>
     </div>
   );

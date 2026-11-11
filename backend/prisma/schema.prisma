@@ -40,8 +40,9 @@ model Club {
   sharingConsentAt DateTime
 
   users     User[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  fighters  Fighter[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model User {
@@ -69,4 +70,57 @@ model Session {
 
   @@index([userId])
   @@index([expiresAt])
+}
+
+enum ProposalStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+model Fighter {
+  id              String     @id @default(uuid())
+  club            Club       @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  clubId          String
+  firstName       String
+  lastName        String
+  discipline      Discipline
+  // Catégories de poids possibles, en kg (71 = « −71 kg », 63.5 = « −63,5 kg »)
+  weightClassesKg Float[]
+  birthDate       DateTime   @db.Date
+  heightCm        Int?
+  fights          Int        @default(0)
+  wins            Int        @default(0)
+  losses          Int        @default(0)
+  // Mois où le combattant est disponible, au format « 2026-12 »
+  availableMonths String[]
+
+  proposalsSent     Proposal[] @relation("ProposalFrom")
+  proposalsReceived Proposal[] @relation("ProposalTo")
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+
+  @@index([clubId])
+  @@index([discipline])
+}
+
+// Un club propose à un autre un combat entre deux de leurs combattants.
+model Proposal {
+  id              String         @id @default(uuid())
+  fromFighter     Fighter        @relation("ProposalFrom", fields: [fromFighterId], references: [id], onDelete: Cascade)
+  fromFighterId   String
+  toFighter       Fighter        @relation("ProposalTo", fields: [toFighterId], references: [id], onDelete: Cascade)
+  toFighterId     String
+  weightClassKg   Float
+  // Mois souhaité (« 2026-12 »), repris des critères de recherche
+  desiredMonth    String?
+  status          ProposalStatus @default(PENDING)
+  respondedAt     DateTime?
+  // Le combat est confirmé quand les deux clubs l'ont déclaré
+  fromConfirmedAt DateTime?
+  toConfirmedAt   DateTime?
+  createdAt       DateTime       @default(now())
+
+  @@index([fromFighterId])
+  @@index([toFighterId])
 }

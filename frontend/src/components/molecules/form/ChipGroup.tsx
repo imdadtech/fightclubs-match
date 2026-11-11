@@ -1,3 +1,5 @@
+import Chip from "../../atoms/Chip";
+
 interface ChipGroupProps {
   label: string;
   hint?: string;
@@ -5,41 +7,37 @@ interface ChipGroupProps {
   value: string[];
   onChange: (value: string[]) => void;
   className?: string;
+  /** Écart entre le libellé et les puces (par défaut 8 px). */
+  labelGap?: string;
   /** Message d'erreur de validation. */
   error?: string;
 }
 
-function ChipGroup({ label, hint, options, value, onChange, className = "", error }: ChipGroupProps) {
+function ChipGroup({
+  label,
+  hint,
+  options,
+  value,
+  onChange,
+  className = "",
+  labelGap = "gap-2",
+  error,
+}: ChipGroupProps) {
   const toggle = (option: string) =>
     onChange(value.includes(option) ? value.filter((v) => v !== option) : [...value, option]);
 
   return (
-    <div className={`flex flex-col gap-2 ${className}`}>
+    <div className={`flex flex-col ${labelGap} ${className}`}>
       <span className="text-[13px] font-bold">
         {label}
         {hint && <span className="font-medium text-ink-muted"> {hint}</span>}
       </span>
       <div className="flex flex-wrap gap-2">
-        {options.map((option) => {
-          const selected = value.includes(option);
-          return (
-            <button
-              key={option}
-              type="button"
-              aria-pressed={selected}
-              onClick={() => toggle(option)}
-              className={
-                "min-h-11 cursor-pointer rounded-pill border-2 px-4 font-sans text-[14px] font-semibold " +
-                "focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-ink " +
-                (selected
-                  ? "border-ink bg-ink text-canvas"
-                  : "border-line-strong bg-surface-raised text-ink")
-              }
-            >
-              {selected ? `✓ ${option}` : option}
-            </button>
-          );
-        })}
+        {options.map((option) => (
+          <Chip key={option} active={value.includes(option)} onClick={() => toggle(option)}>
+            {option}
+          </Chip>
+        ))}
       </div>
       {error && (
         <p role="alert" className="m-0 text-[14px] leading-5 font-bold text-red-deep">
