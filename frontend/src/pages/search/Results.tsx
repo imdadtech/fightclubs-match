@@ -16,7 +16,7 @@ import {
   upcomingMonths,
 } from "../../lib/fighters";
 import ClubShell from "./ClubShell";
-import { useSearch } from "./SearchContext";
+import { useSearch } from "./useSearch";
 
 const label = "text-[12px] font-bold tracking-[0.08em] text-ink-muted uppercase";
 

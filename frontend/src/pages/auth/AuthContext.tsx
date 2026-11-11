@@ -1,25 +1,8 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import { api, ApiError } from "../../lib/api";
-
-interface SessionUser {
-  id: string;
-  email: string;
-  clubId: string | null;
-}
-
-type AuthState =
-  | { status: "loading" }
-  | { status: "anonymous" }
-  | { status: "signed-in"; user: SessionUser };
-
-interface AuthContextValue {
-  auth: AuthState;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
-}
-
-const AuthContext = createContext<AuthContextValue | null>(null);
+import { AuthContext } from "./useAuth";
+import type { AuthState, SessionUser } from "./useAuth";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [auth, setAuth] = useState<AuthState>({ status: "loading" });
@@ -45,10 +28,4 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo(() => ({ auth, login, logout }), [auth, login, logout]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
-
-export function useAuth(): AuthContextValue {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth doit être utilisé dans <AuthProvider>");
-  return ctx;
 }

@@ -1,5 +1,5 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "./useAuth";
 
 /** Réserve les écrans du club connecté : sans session, renvoie vers la connexion. */
 function RequireClub() {

@@ -5,7 +5,7 @@ import AppLogo from "../../components/atoms/AppLogo";
 import Button from "../../components/atoms/Buttons";
 import TextField from "../../components/molecules/form/TextField";
 import { ApiError } from "../../lib/api";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "./useAuth";
 
 function Login() {
   const { auth, login } = useAuth();

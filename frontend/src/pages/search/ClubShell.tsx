@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
 import AppShell from "../../components/templates/AppShell";
-import { useSearch } from "./SearchContext";
+import { useSearch } from "./useSearch";
 
 /** `AppShell` avec le nom du club connecté. */
 function ClubShell(props: Omit<ComponentProps<typeof AppShell>, "clubName">) {

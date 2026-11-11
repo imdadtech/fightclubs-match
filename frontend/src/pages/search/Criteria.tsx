@@ -23,7 +23,7 @@ import {
 } from "../../lib/fighters";
 import type { Discipline, SearchCriteria } from "../../lib/fighters";
 import ClubShell from "./ClubShell";
-import { useSearch } from "./SearchContext";
+import { useSearch } from "./useSearch";
 
 const plural = (n: number) => `${n} combattant${n > 1 ? "s" : ""}`;
 const months = upcomingMonths();

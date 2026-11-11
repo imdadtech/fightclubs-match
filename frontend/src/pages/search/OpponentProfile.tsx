@@ -18,7 +18,7 @@ import {
 } from "../../lib/fighters";
 import type { Fighter, OpponentDetail } from "../../lib/fighters";
 import ClubShell from "./ClubShell";
-import { useSearch } from "./SearchContext";
+import { useSearch } from "./useSearch";
 
 function Side({ tone, label, fighter }: { tone: "red" | "blue"; label: string; fighter: Fighter }) {
   const red = tone === "red";
