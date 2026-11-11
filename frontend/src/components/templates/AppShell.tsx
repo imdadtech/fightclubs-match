@@ -26,6 +26,8 @@ interface AppShellProps {
   hideTabs?: boolean;
   /** Barre d'action desktop, au bas du contenu. */
   desktopActions?: ReactNode;
+  /** Logo en tête du contenu sur mobile (écrans de la fiche combattant). */
+  mobileLogo?: boolean;
 }
 
 /**
@@ -42,6 +44,7 @@ function AppShell({
   mobileActionsClassName = "pb-4",
   hideTabs,
   desktopActions,
+  mobileLogo,
 }: AppShellProps) {
   return (
     <div className="flex h-dvh flex-col overflow-hidden bg-canvas text-ink min-[900px]:flex-row">
@@ -72,6 +75,7 @@ function AppShell({
             "min-[900px]:gap-6 min-[900px]:px-14 min-[900px]:pt-10 min-[900px]:pb-6"
           }
         >
+          {mobileLogo && <AppLogo className="flex-none text-[22px] min-[900px]:hidden" />}
           {children}
         </main>
 

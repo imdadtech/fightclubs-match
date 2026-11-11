@@ -6,6 +6,7 @@ import Button from "../../../components/atoms/Buttons";
 import StepIndicator from "../../../components/molecules/StepIndicator";
 import Toast from "../../../components/molecules/Toast";
 import { ApiError } from "../../../lib/api";
+import { useAuth } from "../../auth/useAuth";
 import ClubStepClub from "./ClubStepClub";
 import ClubStepContact from "./ClubStepContact";
 import ClubStepManager from "./ClubStepManager";
@@ -69,6 +70,7 @@ function ClubOnboarding() {
   const isLast = step === STEPS.length;
 
   const nav = useNavigate();
+  const { refresh } = useAuth();
 
   const formik = useFormik<ClubForm>({
     initialValues: initialClubForm,
@@ -79,7 +81,9 @@ function ClubOnboarding() {
       setToast(null);
       try {
         await signupClub(values);
-
+        // L'inscription ouvre une session côté API : on la relit avant de rediriger,
+        // sinon l'app se croit encore déconnectée et renvoie vers la connexion.
+        await refresh();
         nav("/adversaires");
       } catch (error) {
         if (error instanceof ApiError && error.code === "email_taken") {

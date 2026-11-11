@@ -94,8 +94,9 @@ for (const c of clubs) {
       shareEmail: true, sharePhone: true, sharingConsentAt: now,
       users: { create: { email: c.email, passwordHash, termsAcceptedAt: now } },
       fighters: {
-        create: c.fighters.map(({ age, discipline, ...f }) => ({
-          ...f, discipline: discipline ?? "BOXE_ANGLAISE", birthDate: born(age),
+        create: c.fighters.map(({ age, discipline, fights, wins, losses, ...f }) => ({
+          ...f, sex: "MALE" as const, birthDate: born(age),
+          records: { create: [{ discipline: discipline ?? "BOXE_ANGLAISE", fights, wins, losses }] },
         })),
       },
     },

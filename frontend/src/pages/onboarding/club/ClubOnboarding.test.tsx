@@ -2,16 +2,34 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { AuthContext } from "../../auth/useAuth";
 import ClubOnboarding from "./ClubOnboarding";
 
+/** Journal d'événements : vérifie l'ordre « session relue » puis « redirection ». */
+const events: string[] = [];
+const refresh = vi.fn(async () => {
+  events.push("refresh");
+});
+
+function AdversairesPage() {
+  events.push("redirect");
+  return <h1>Page adversaires</h1>;
+}
+
 function setup() {
+  events.length = 0;
+  refresh.mockClear();
   render(
-    <MemoryRouter>
-      <Routes>
-        <Route path="/" element={<ClubOnboarding />} />
-        <Route path="/adversaires" element={<h1>Page adversaires</h1>} />
-      </Routes>
-    </MemoryRouter>,
+    <AuthContext.Provider
+      value={{ auth: { status: "anonymous" }, login: vi.fn(), logout: vi.fn(), refresh }}
+    >
+      <MemoryRouter>
+        <Routes>
+          <Route path="/" element={<ClubOnboarding />} />
+          <Route path="/adversaires" element={<AdversairesPage />} />
+        </Routes>
+      </MemoryRouter>
+    </AuthContext.Provider>,
   );
   return userEvent.setup();
 }
@@ -130,6 +148,8 @@ describe("ClubOnboarding : envoi à l'API", () => {
     await fillAllSteps();
 
     expect(await screen.findByRole("heading", { name: "Page adversaires" })).toBeInTheDocument();
+    // Régression : sans relire la session, l'app se croyait déconnectée et renvoyait vers la connexion.
+    expect(events).toEqual(["refresh", "redirect"]);
     expect(JSON.parse(fetchMock.mock.calls[0][1].body).club.disciplines).toEqual(["BOXE_ANGLAISE"]);
   });
 

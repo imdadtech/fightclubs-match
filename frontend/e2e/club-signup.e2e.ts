@@ -32,7 +32,7 @@ async function acceptTermsAndSubmit(page: Page) {
   await next(page, "Créer le compte du club");
 }
 
-test("création d'un compte club : du formulaire à la page « compte créé »", async ({ page }) => {
+test("création d'un compte club : du formulaire à la recherche d'adversaires, connecté", async ({ page }) => {
   const email = uniqueEmail("ok");
   await page.goto("/onboarding");
   await page.getByRole("link", { name: /club/i }).first().click();
@@ -42,8 +42,9 @@ test("création d'un compte club : du formulaire à la page « compte créé »"
   await fillManagerStep(page, email);
   await acceptTermsAndSubmit(page);
 
-  await expect(page.getByRole("heading", { name: "Le compte de ton club est créé" })).toBeVisible();
-  await expect(page.getByRole("status")).toContainText("Tu es connecté");
+  // Le club arrive directement dans son espace : pas de détour par la page de connexion.
+  await expect(page).toHaveURL(/\/adversaires$/);
+  await expect(page.getByRole("heading", { name: "Trouver un adversaire" })).toBeVisible();
 
   // La session est réellement ouverte : l'API reconnaît le cookie posé à l'inscription.
   const me = await page.evaluate(async () => {
@@ -62,7 +63,7 @@ test("e-mail déjà utilisé : retour à l'étape « Responsable » avec un mess
   await fillClubStep(page);
   await fillManagerStep(page, email);
   await acceptTermsAndSubmit(page);
-  await expect(page.getByRole("heading", { name: "Le compte de ton club est créé" })).toBeVisible();
+  await expect(page).toHaveURL(/\/adversaires$/);
 
   // 2e tentative avec le même e-mail, dans un contexte vierge.
   const context = await browser.newContext();

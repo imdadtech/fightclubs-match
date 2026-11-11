@@ -1,10 +1,10 @@
 import type { Request, Response } from "express";
 import { z } from "zod";
 import { prisma } from "../../db/prisma.js";
-import { toFighterDto, withClub } from "../fighter/fighter.dto.js";
+import { toFighterDto, withRelations } from "../fighter/fighter.dto.js";
 import { createProposalSchema, listProposalsQuerySchema } from "./proposal.schemas.js";
 
-const fighterInclude = { include: withClub } as const;
+const fighterInclude = { include: withRelations } as const;
 const proposalInclude = { fromFighter: fighterInclude, toFighter: fighterInclude } as const;
 
 type ProposalRow = NonNullable<Awaited<ReturnType<typeof findProposal>>>;

@@ -41,8 +41,9 @@ model Club {
 
   users     User[]
   fighters  Fighter[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  invites   FighterInvite[]
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
 }
 
 model User {
@@ -72,6 +73,11 @@ model Session {
   @@index([expiresAt])
 }
 
+enum Sex {
+  MALE
+  FEMALE
+}
+
 enum ProposalStatus {
   PENDING
   ACCEPTED
@@ -79,21 +85,24 @@ enum ProposalStatus {
 }
 
 model Fighter {
-  id              String     @id @default(uuid())
-  club            Club       @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  id              String   @id @default(uuid())
+  club            Club     @relation(fields: [clubId], references: [id], onDelete: Cascade)
   clubId          String
   firstName       String
   lastName        String
-  discipline      Discipline
   // Catégories de poids possibles, en kg (71 = « −71 kg », 63.5 = « −63,5 kg »)
   weightClassesKg Float[]
-  birthDate       DateTime   @db.Date
+  sex             Sex
+  birthDate       DateTime @db.Date
   heightCm        Int?
-  fights          Int        @default(0)
-  wins            Int        @default(0)
-  losses          Int        @default(0)
   // Mois où le combattant est disponible, au format « 2026-12 »
   availableMonths String[]
+
+  // Palmarès par discipline (au moins une)
+  records   FighterRecord[]
+  invite    FighterInvite?
+  // Renseigné quand le combattant a rempli sa fiche lui-même via un lien
+  consentAt DateTime?
 
   proposalsSent     Proposal[] @relation("ProposalFrom")
   proposalsReceived Proposal[] @relation("ProposalTo")
@@ -101,7 +110,6 @@ model Fighter {
   updatedAt         DateTime   @updatedAt
 
   @@index([clubId])
-  @@index([discipline])
 }
 
 // Un club propose à un autre un combat entre deux de leurs combattants.
@@ -123,4 +131,33 @@ model Proposal {
 
   @@index([fromFighterId])
   @@index([toFighterId])
+}
+
+model FighterRecord {
+  id         String     @id @default(uuid())
+  fighter    Fighter    @relation(fields: [fighterId], references: [id], onDelete: Cascade)
+  fighterId  String
+  discipline Discipline
+  fights     Int
+  wins       Int
+  losses     Int
+
+  @@unique([fighterId, discipline])
+  @@index([discipline])
+}
+
+// Lien à usage unique envoyé par un club à un combattant pour qu'il remplisse sa fiche.
+model FighterInvite {
+  id        String    @id @default(uuid())
+  // SHA-256 du jeton présent dans le lien
+  tokenHash String    @unique
+  club      Club      @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  clubId    String
+  expiresAt DateTime
+  usedAt    DateTime?
+  fighter   Fighter?  @relation(fields: [fighterId], references: [id], onDelete: SetNull)
+  fighterId String?   @unique
+  createdAt DateTime  @default(now())
+
+  @@index([clubId])
 }

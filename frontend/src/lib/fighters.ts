@@ -24,11 +24,27 @@ export interface ClubSummary {
   postalCode: string;
 }
 
+export type Sex = "MALE" | "FEMALE";
+export const SEXES: { value: Sex; label: string }[] = [
+  { value: "MALE", label: "Homme" },
+  { value: "FEMALE", label: "Femme" },
+];
+
+/** Palmarès d'un combattant dans une discipline. */
+export interface DisciplineRecord {
+  discipline: Discipline;
+  fights: number;
+  wins: number;
+  losses: number;
+}
+
 export interface Fighter {
   id: string;
   firstName: string;
   lastInitial: string;
   club: ClubSummary;
+  sex: Sex;
+  /** Discipline recherchée (ou principale) et son palmarès : `fights`, `wins`, `losses`. */
   discipline: Discipline;
   weightClassesKg: number[];
   age: number;
@@ -36,8 +52,30 @@ export interface Fighter {
   fights: number;
   wins: number;
   losses: number;
+  /** Palmarès de chaque discipline pratiquée. */
+  records: DisciplineRecord[];
+  totalFights: number;
   /** « 2026-12 » */
   availableMonths: string[];
+}
+
+/** Un combattant est « disponible » dès qu'il a au moins un mois de disponibilité. */
+export const isAvailable = (f: Pick<Fighter, "availableMonths">) => f.availableMonths.length > 0;
+
+/** « −71 / −75 kg » */
+export const formatWeightsShort = (kgs: number[]) =>
+  `${kgs.map((kg) => `−${String(kg).replace(".", ",")}`).join(" / ")} kg`;
+
+/** Fiche saisie par un club ou par le combattant lui-même (via un lien). */
+export interface FighterInput {
+  firstName: string;
+  lastName: string;
+  /** « 1999-09-02 » */
+  birthDate: string;
+  sex: Sex;
+  weightClassesKg: number[];
+  heightCm: number | null;
+  records: { discipline: Discipline; fights: number; wins: number }[];
 }
 
 export const fighterName = (f: Pick<Fighter, "firstName" | "lastInitial">) => `${f.firstName} ${f.lastInitial}.`;
@@ -131,6 +169,16 @@ export function searchQuery(c: SearchCriteria): string {
 }
 
 export const listOwnFighters = () => api<Fighter[]>("/fighters");
+export const createFighter = (input: FighterInput) => api<Fighter>("/fighters", { method: "POST", body: input });
+
+/** Lien à usage unique pour qu'un combattant remplisse lui-même sa fiche. */
+export const createInvite = () => api<{ url: string; expiresAt: string }>("/invites", { method: "POST" });
+export const getInvite = (token: string) => api<{ clubName: string }>(`/invites/${encodeURIComponent(token)}`);
+export const submitInvite = (token: string, input: FighterInput) =>
+  api<{ firstName: string; clubName: string }>(`/invites/${encodeURIComponent(token)}`, {
+    method: "POST",
+    body: { ...input, consent: true },
+  });
 export const searchOpponents = (c: SearchCriteria) => api<SearchResponse>(`/opponents?${searchQuery(c)}`);
 export const getOpponent = (id: string, fighterId: string) =>
   api<OpponentDetail>(`/opponents/${id}?fighterId=${encodeURIComponent(fighterId)}`);

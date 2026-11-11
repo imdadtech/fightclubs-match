@@ -6,6 +6,7 @@ import { prisma } from "./db/prisma.js";
 import { logger } from "./lib/logger.js";
 import { authRouter } from "./modules/auth/auth.routes.js";
 import { fighterRouter } from "./modules/fighter/fighter.routes.js";
+import { inviteRouter } from "./modules/invite/invite.routes.js";
 import { opponentRouter } from "./modules/opponent/opponent.routes.js";
 import { proposalRouter } from "./modules/proposal/proposal.routes.js";
 
@@ -15,6 +16,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use("/auth", authRouter);
 app.use("/fighters", fighterRouter);
+app.use("/invites", inviteRouter);
 app.use("/opponents", opponentRouter);
 app.use("/proposals", proposalRouter);
 

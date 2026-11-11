@@ -4,6 +4,7 @@ export interface SessionUser {
   id: string;
   email: string;
   clubId: string | null;
+  club: { id: string; name: string } | null;
 }
 
 export type AuthState =
@@ -15,6 +16,8 @@ export interface AuthContextValue {
   auth: AuthState;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  /** Relit la session (après une inscription, qui ouvre une session côté API). */
+  refresh: () => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null);

@@ -10,6 +10,8 @@ export interface SearchState {
   /** `null` tant qu'aucun combattant n'est chargé. */
   criteria: SearchCriteria | null;
   setCriteria: (criteria: SearchCriteria) => void;
+  /** Recharge les combattants du club (après un ajout). */
+  refresh: () => Promise<void>;
 }
 
 export const SearchContext = createContext<SearchState | null>(null);

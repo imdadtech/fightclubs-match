@@ -1,4 +1,7 @@
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
+import AddFighter from "./pages/fighters/AddFighter";
+import FighterLink from "./pages/fighters/FighterLink";
+import Fighters from "./pages/fighters/Fighters";
 import ClubOnboarding from "./pages/onboarding/club/ClubOnboarding";
 import ProfilePicker from "./pages/onboarding/ProfilePicker";
 import { AuthProvider } from "./pages/auth/AuthContext";
@@ -28,6 +31,7 @@ function App() {
         <Route path="/onboarding" element={<ProfilePicker />} />
         <Route path="/onboarding/club" element={<ClubOnboarding />} />
         <Route path="/connexion" element={<Login />} />
+        <Route path="/combattant/:token" element={<FighterLink />} />
         <Route element={<RequireClub />}>
           <Route element={<ClubArea />}>
             <Route path="/adversaires" element={<Criteria />} />
@@ -36,7 +40,8 @@ function App() {
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/notifications/:id" element={<Contact />} />
             <Route path="/annonces" element={<ComingSoon title="Annonces" />} />
-            <Route path="/profil" element={<ComingSoon title="Profil" />} />
+            <Route path="/profil" element={<Fighters />} />
+            <Route path="/profil/combattants/nouveau" element={<AddFighter />} />
           </Route>
         </Route>
       </Routes>

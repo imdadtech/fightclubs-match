@@ -62,7 +62,7 @@ export async function login(req: Request, res: Response) {
   }
   const { email, password } = parsed.data;
   try {
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({ where: { email }, include: { club: { select: { id: true, name: true } } } });
     const ok = await bcrypt.compare(password, user?.passwordHash ?? DUMMY_HASH);
     if (!user || !ok) {
       res.status(401).json({ error: "invalid_credentials" });
